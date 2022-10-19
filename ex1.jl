@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.11
 
 #> [frontmatter]
 #> title = "Queries & Data Wrangling"
@@ -100,9 +100,6 @@ Create a new dataframe based on `df_ps_raw` that contains only the following col
 - disc_facility
 """
 
-# ╔═╡ 9105b929-ad4b-48f7-b234-2bab6f3bd524
-response_1a =  missing
-
 # ╔═╡ 525c5db3-7e7e-466c-a2b8-1b6d40d5bd64
 md"""
 ## Selecting Rows
@@ -154,16 +151,13 @@ md"""
 **Q1b:**  Apply filter to the `df_raw` dataframe to get all the entries that have a value (other than `missing`) in the `pl_projobliq` column and store the result in the varliable `df_ps_w_rm`.
 """
 
-# ╔═╡ 58aba1d9-5605-4dc7-a613-ffe587a723d0
-df_ps_w_rm = missing 
-
 # ╔═╡ fc4a26b6-1325-47ac-9aa8-949343723eff
 md"""
 **Q1c:** The HAT project eventually expanded to use observatories in both the north and south hemispheres.  Apply filter to the `df_raw` dataframe to get all the entries that have a value (other than `missing`) in the `pl_projobliq` column and were discovered by either "HATNet" or "HATSouth" (as reported in the `disc_facility` column).  Store the result in the variable `df_ps_hatns_w_rm`.
 """
 
 # ╔═╡ 1e81f5ee-5a7e-4777-8f17-b4cc7554b467
-df_ps_hatns_w_rm = missing
+df_ps_hatns_w_rm = filter(row->row.disc_facility=="HATNetHATSouth"&& !ismissing(row.pl_projobliq), df_p);
 
 # ╔═╡ f21b46ad-a293-486b-bafd-24245a3d1511
 md"""
@@ -193,11 +187,6 @@ md"""
 **Q2a:** Query the exoplanet archive to retrieve all the rows that contain a 
 numerical value for `pl_projobliq` and were detected by either the original HATNet (in the northern hemispehre) or HATSouth.  Retrieve only the columns contained in `cols_to_keep`.  Store the result in a dataframe named `df_pl_hatns_w_rm`.
 """
-
-# ╔═╡ 183cffd3-db02-4ba9-86bf-5af28d84cd3b
-begin  # replace with your code
-	df_pl_hatns_w_rm = missing 
-end
 
 # ╔═╡ 4e065419-b812-42af-a48e-830ac222be87
 md"""
@@ -234,7 +223,7 @@ md"""
 """
 
 # ╔═╡ db83d146-6954-4b40-9a43-668a5a23aa91
-response_3a = missing
+response_3a = "The outer takes any row in which its name occurs in at least one of the datasets(all element in the two dataframes). Therefore, the ourt should have the largest number of rows. The left join gives all the element in the left dataframe (it is hat in this situation). However, the right join gives all the element in the right dataframe (it is kepler in this situation). "
 
 # ╔═╡ e1e7c565-aea3-46ce-aa31-c4268a27f5f6
 if ismissing(response_3a)
@@ -245,11 +234,6 @@ end
 md"""
 **Q3b:** Use a filter and a join to find the Kepler id number for any planets discovered by the TrES survey (`disc_facility` equals "TrES").  Store the resulting vector of integers in the variable `response_3b`.
 """
-
-# ╔═╡ 773bd2c2-8276-462c-ac4f-219624101743
-begin
-	response_3b = missing
-end
 
 # ╔═╡ 19fc6a33-c0aa-4a14-b666-365e943e5c30
 md"""
@@ -323,7 +307,7 @@ md"""
 """
 
 # ╔═╡ a0c53b5e-76ce-428e-bbef-14e09f10ba51
-response_4 = missing
+response_4 = 1
 
 # ╔═╡ 5ba92ea8-a92f-4c7e-9a3a-cc7b3fd11585
 if ismissing(response_4) still_missing() 
@@ -431,29 +415,10 @@ We can break this down into the following steps.
 # ╔═╡ 4c67c356-e198-42d1-8a34-991cd82eed56
 round_to_nearest_600(x) = round(Int64,x/600)*600
 
-# ╔═╡ d0e15021-afb0-48b4-9b25-ff0e84074024
-begin  # Insert your code for Q4 in this cell
-	# Filter
-	# Transform
-	# Split (or group)
-	# Apply
-	# Sort
-end
-
 # ╔═╡ f02ae91c-4588-4840-a2f2-b6039cf5f222
 md"""
 Once you code works, then you should see two plots appear below.
 """
-
-# ╔═╡ ab27b832-55dd-4ff7-9692-920a7f0daa4d
-if @isdefined df_pl_w_rm_by_teff
-	scatter(df_pl_w_rm_by_teff.st_teff_mean, df_pl_w_rm_by_teff.pl_projobliq_mean_abs, yerr = df_pl_w_rm_by_teff.pl_projobliq_std_abs, xlabel="Teff (K)", ylabel="abs(λ)", label=:none)
-end
-
-# ╔═╡ 2f4172bd-ebd5-4db2-81f4-c30ba339ffd9
-if @isdefined df_pl_w_rm_by_teff
-	scatter(df_pl_w_rm_by_teff.st_teff_mean, df_pl_w_rm_by_teff.pl_rade_mean, yerr=df_pl_w_rm_by_teff.pl_rade_std, xlabel="Teff (K)", ylabel="Rₚ (R⊕)", label=:none)
-end
 
 # ╔═╡ 8a4ce3c9-a120-41c1-b964-4930d2f04a29
 md"""
@@ -623,6 +588,9 @@ df_ps_hat_w_rm2 = filter(row->row.disc_facility=="HATNet" && !ismissing(row.pl_p
 # ╔═╡ 9333b5fe-3527-482c-a885-30b4b919ba7a
 @test isequal(df_ps_hat_w_rm1,df_ps_hat_w_rm2)
 
+# ╔═╡ 58aba1d9-5605-4dc7-a613-ffe587a723d0
+df_ps_w_rm = filter(row->!ismissing(row.pl_projobliq), df_ps)
+
 # ╔═╡ 0db75648-f44b-4b5a-b2c1-4caa946c3c2c
 df_ps_raw[!,cols_to_keep];
 
@@ -632,6 +600,9 @@ Now, we can proceed to manipulate a much smaller DataFrame.
 $(round(Base.summarysize(df_ps) / 1024^2,sigdigits=3)) MB instead of the $(round(Base.summarysize(df_ps_raw) / 1024^2,sigdigits=3)) MB for `df_raw`.
 Even though, the full dataset would easily fit into any modern computer's RAM, it would be significantly bigger than size of the *cache*, a small, but faster portion of memory that can dramatically accelerate computations.
 """
+
+# ╔═╡ 9105b929-ad4b-48f7-b234-2bab6f3bd524
+response_1a =  df_ps_raw[:,[:pl_name, :pl_orbper, :pl_rade,:ttv_flag,:sy_pnum,:disc_facility]]
 
 # ╔═╡ f5ac5256-5e48-488d-91cf-2b169bfa36e5
 begin
@@ -684,6 +655,12 @@ begin
 	df_ps_hat, df_kepler_names, df_ps_hat_and_kepler_inner, df_ps_hat_and_kepler_left, df_ps_hat_and_kepler_right, df_ps_hat_and_kepler_outer
 	
 	DataFrame(map(s->(;dataframe=s, num_rows=size(eval(s),1), num_cols=size(eval(s),2)),[:df_ps_hat,:df_kepler_names,:df_ps_hat_and_kepler_inner,:df_ps_hat_and_kepler_left,:df_ps_hat_and_kepler_right,:df_ps_hat_and_kepler_outer]))
+end
+
+# ╔═╡ 773bd2c2-8276-462c-ac4f-219624101743
+begin
+	df_ps_tres = filter(row->row.disc_facility=="TrES", df_ps);
+	response_3b = innerjoin(df_ps_tres,df_kepler_names,on=:pl_name).kepid
 end
 
 # ╔═╡ a91fc636-644c-4860-9f28-2cd2f03a59af
@@ -778,6 +755,13 @@ df_pl_w_rm = query_to_df(url_get_pl_w_rm_from_ps_table)
 # ╔═╡ 67ea55f3-391a-42a9-8735-7420fe75a16f
 let
 	plt = scatter(df_pl_w_rm.pl_orbper,df_pl_w_rm.pl_projobliq, label=:none, xlabel="Period (d)", ylabel = "λ (degrees)", xscale=:log10)
+end
+
+# ╔═╡ 183cffd3-db02-4ba9-86bf-5af28d84cd3b
+begin  # replace with your code 
+	url_get_hatns_w_rm = make_tap_query_url(nexsci_query_base_url, planeary_systems_table, select_cols= select_cols_for_tap(cols_to_keep), 
+	where = "(disc_facility='HATNet'+or+disc_facility='HATSouth')+and+pl_projobliq+is+not+null")
+	df_pl_hatns_w_rm = query_to_df(url_get_hatns_w_rm)
 end
 
 # ╔═╡ 39f6a723-8295-45dd-9940-32bf3db9d035
@@ -888,6 +872,31 @@ let
 		 				     :pl_projobliq =>mean_skipmissing=>:pl_projobliq_mean )
 end
 
+# ╔═╡ d0e15021-afb0-48b4-9b25-ff0e84074024
+begin  # Insert your code for Q4 in this cell
+	# Filter
+	# Transform
+	# Split (or group)
+	# Apply
+	# Sort
+	 df_1 = filter(row->!ismissing(row.st_teff), df_ps_w_rm_ref)
+	df_2 = transform(df_1, :st_teff => ByRow(round_to_nearest_600) => :st_teff_bin )
+	df_3 = groupby(df_2, :st_teff_bin)
+	df_pl_w_rm_by_teff = combine(df_3, nrow, :st_teff=>mean, :pl_rade=>mean,
+	:pl_rade=>std, :pl_projobliq=>(x->mean(abs.(x)))=>:pl_projobliq_mean_abs, :pl_projobliq=>(x->std(abs.(x)))=>:pl_projobliq_std_abs ) 
+	sort!(df_pl_w_rm_by_teff,:st_teff_bin)
+end
+
+# ╔═╡ ab27b832-55dd-4ff7-9692-920a7f0daa4d
+if @isdefined df_pl_w_rm_by_teff
+	scatter(df_pl_w_rm_by_teff.st_teff_mean, df_pl_w_rm_by_teff.pl_projobliq_mean_abs, yerr = df_pl_w_rm_by_teff.pl_projobliq_std_abs, xlabel="Teff (K)", ylabel="abs(λ)", label=:none)
+end
+
+# ╔═╡ 2f4172bd-ebd5-4db2-81f4-c30ba339ffd9
+if @isdefined df_pl_w_rm_by_teff
+	scatter(df_pl_w_rm_by_teff.st_teff_mean, df_pl_w_rm_by_teff.pl_rade_mean, yerr=df_pl_w_rm_by_teff.pl_rade_std, xlabel="Teff (K)", ylabel="Rₚ (R⊕)", label=:none)
+end
+
 # ╔═╡ ec9d7ccb-1c6c-40e3-8bff-9ef02043dd20
 df_ps_hatns_w_rm_ref = filter(row->(row.disc_facility=="HATNet" || row.disc_facility=="HATSouth") && !ismissing(row.pl_projobliq), df_ps);
 
@@ -993,9 +1002,8 @@ StatsBase = "~0.33.21"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.2"
+julia_version = "1.7.3"
 manifest_format = "2.0"
-project_hash = "811b51afa0a9712e0e8e4bcd844687a08442f7f0"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
@@ -1011,7 +1019,6 @@ version = "3.4.0"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
-version = "1.1.1"
 
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -1099,7 +1106,6 @@ version = "4.2.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "0.5.2+0"
 
 [[deps.Contour]]
 git-tree-sha1 = "d05d9e7b7aedff4e5b51a029dced05cfb6125781"
@@ -1112,9 +1118,9 @@ uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 version = "4.1.1"
 
 [[deps.DataAPI]]
-git-tree-sha1 = "46d2680e618f8abd007bce0c3026cb0c4a8f2032"
+git-tree-sha1 = "1106fa7e1256b402a86a8e7b15c00c85036fef49"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
-version = "1.12.0"
+version = "1.11.0"
 
 [[deps.DataFrames]]
 deps = ["Compat", "DataAPI", "Future", "InvertedIndices", "IteratorInterfaceExtensions", "LinearAlgebra", "Markdown", "Missings", "PooledArrays", "PrettyTables", "Printf", "REPL", "Reexport", "SortingAlgorithms", "Statistics", "TableTraits", "Tables", "Unicode"]
@@ -1160,7 +1166,6 @@ version = "0.9.1"
 [[deps.Downloads]]
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
-version = "1.6.0"
 
 [[deps.EarCut_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1187,9 +1192,9 @@ version = "0.4.1"
 
 [[deps.FFMPEG_jll]]
 deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers", "LAME_jll", "Libdl", "Ogg_jll", "OpenSSL_jll", "Opus_jll", "PCRE2_jll", "Pkg", "Zlib_jll", "libaom_jll", "libass_jll", "libfdk_aac_jll", "libvorbis_jll", "x264_jll", "x265_jll"]
-git-tree-sha1 = "74faea50c1d007c85837327f6775bea60b5492dd"
+git-tree-sha1 = "40c63abc94311b4e2bff4cd9a6a59bda1873c95b"
 uuid = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
-version = "4.4.2+2"
+version = "4.4.2+1"
 
 [[deps.FilePathsBase]]
 deps = ["Compat", "Dates", "Mmap", "Printf", "Test", "UUIDs"]
@@ -1272,9 +1277,9 @@ version = "0.21.0+0"
 
 [[deps.Glib_jll]]
 deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE2_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "fb83fbe02fe57f2c068013aa94bcdf6760d3a7a7"
+git-tree-sha1 = "61c566fbd29b42c9a58e7998ff69b2268a205364"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.74.0+1"
+version = "2.74.0+0"
 
 [[deps.Graphite2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1334,9 +1339,9 @@ uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[deps.InverseFunctions]]
 deps = ["Test"]
-git-tree-sha1 = "49510dfcb407e572524ba94aeae2fced1f3feb0f"
+git-tree-sha1 = "b3364212fb5d870f724876ffcd34dd8ec6d98918"
 uuid = "3587e190-3f89-42d0-90ee-14403ec27112"
-version = "0.1.8"
+version = "0.1.7"
 
 [[deps.InvertedIndices]]
 git-tree-sha1 = "bee5f1ef5bf65df56bdd2e40447590b272a5471f"
@@ -1420,12 +1425,10 @@ version = "0.15.17"
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
 uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
-version = "0.6.3"
 
 [[deps.LibCURL_jll]]
 deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll", "Zlib_jll", "nghttp2_jll"]
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
-version = "7.84.0+0"
 
 [[deps.LibGit2]]
 deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
@@ -1434,7 +1437,6 @@ uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 [[deps.LibSSH2_jll]]
 deps = ["Artifacts", "Libdl", "MbedTLS_jll"]
 uuid = "29816b5a-b9ab-546f-933c-edad1886dfa8"
-version = "1.10.2+0"
 
 [[deps.Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
@@ -1531,7 +1533,6 @@ version = "1.1.6"
 [[deps.MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
-version = "2.28.0+0"
 
 [[deps.Measures]]
 git-tree-sha1 = "e498ddeee6f9fdb4551ce855a46f54dbd900245f"
@@ -1549,7 +1550,6 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
-version = "2022.2.1"
 
 [[deps.NaNMath]]
 deps = ["OpenLibm_jll"]
@@ -1559,7 +1559,6 @@ version = "1.0.1"
 
 [[deps.NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
-version = "1.2.0"
 
 [[deps.Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1570,12 +1569,10 @@ version = "1.3.5+1"
 [[deps.OpenBLAS_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
-version = "0.3.20+0"
 
 [[deps.OpenLibm_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "05823500-19ac-5b8b-9628-191a04bc5112"
-version = "0.8.1+0"
 
 [[deps.OpenSSL]]
 deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
@@ -1609,7 +1606,6 @@ version = "1.4.1"
 [[deps.PCRE2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "efcefdf7-47ab-520b-bdef-62a2eaa19f15"
-version = "10.40.0+0"
 
 [[deps.Parsers]]
 deps = ["Dates"]
@@ -1626,7 +1622,6 @@ version = "0.40.1+0"
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-version = "1.8.0"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
@@ -1732,9 +1727,9 @@ version = "1.3.0"
 
 [[deps.RecipesPipeline]]
 deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase"]
-git-tree-sha1 = "017f217e647cf20b0081b9be938b78c3443356a0"
+git-tree-sha1 = "e7eac76a958f8664f2718508435d058168c7953d"
 uuid = "01d81517-befc-4cb6-b9ec-a95719d0359c"
-version = "0.6.6"
+version = "0.6.3"
 
 [[deps.Reexport]]
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
@@ -1761,7 +1756,6 @@ version = "3.4.0"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
-version = "0.7.0"
 
 [[deps.Scratch]]
 deps = ["Dates"]
@@ -1815,9 +1809,9 @@ version = "2.1.7"
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "Random", "StaticArraysCore", "Statistics"]
-git-tree-sha1 = "f86b3a049e5d05227b10e15dbb315c5b90f14988"
+git-tree-sha1 = "2189eb2c1f25cb3f43e5807f26aa864052e50c17"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.5.9"
+version = "1.5.8"
 
 [[deps.StaticArraysCore]]
 git-tree-sha1 = "6b7ba252635a5eff6a0b0664a41ee140a1c9e72a"
@@ -1849,7 +1843,6 @@ version = "0.6.12"
 [[deps.TOML]]
 deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
-version = "1.0.0"
 
 [[deps.TableShowUtils]]
 deps = ["DataValues", "Dates", "JSON", "Markdown", "Test"]
@@ -1878,7 +1871,6 @@ version = "1.9.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.1"
 
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
@@ -2083,7 +2075,6 @@ version = "1.4.0+3"
 [[deps.Zlib_jll]]
 deps = ["Libdl"]
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
-version = "1.2.12+3"
 
 [[deps.Zstd_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -2106,7 +2097,6 @@ version = "0.15.1+0"
 [[deps.libblastrampoline_jll]]
 deps = ["Artifacts", "Libdl", "OpenBLAS_jll"]
 uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
-version = "5.1.1+0"
 
 [[deps.libfdk_aac_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -2129,12 +2119,10 @@ version = "1.3.7+1"
 [[deps.nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
-version = "1.48.0+0"
 
 [[deps.p7zip_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
-version = "17.4.0+0"
 
 [[deps.x264_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -2283,7 +2271,7 @@ version = "1.4.1+0"
 # ╟─5179edd7-84e8-4161-942b-8036c6984b8b
 # ╠═4c67c356-e198-42d1-8a34-991cd82eed56
 # ╠═d0e15021-afb0-48b4-9b25-ff0e84074024
-# ╟─de48a078-ef90-4429-b37e-8bc45e10a825
+# ╠═de48a078-ef90-4429-b37e-8bc45e10a825
 # ╟─f02ae91c-4588-4840-a2f2-b6039cf5f222
 # ╠═ab27b832-55dd-4ff7-9692-920a7f0daa4d
 # ╠═2f4172bd-ebd5-4db2-81f4-c30ba339ffd9
@@ -2295,7 +2283,7 @@ version = "1.4.1+0"
 # ╟─be348711-98f9-4654-ac90-3e5fc893a5e2
 # ╟─6bc2a24b-92c5-490d-895e-2c3eabfc3db7
 # ╟─afb9dd8e-d72a-4fea-8991-b77062d2c732
-# ╟─21eb8fa1-288b-424d-bf63-ff0fcb366735
+# ╠═21eb8fa1-288b-424d-bf63-ff0fcb366735
 # ╟─fff96331-a2ad-4243-8acc-2c869ff89633
 # ╟─39f6a723-8295-45dd-9940-32bf3db9d035
 # ╟─b46b5c15-416c-481c-a89b-9429ccba551d
